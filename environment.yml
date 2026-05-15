@@ -9,5 +9,5 @@ dependencies:
   - pip=24.0
   - duckdb==1.5.2  
   - pip:
-      - streamlit==1.36.0
+      - streamlit==1.40.0
       - plotly==5.22.0
