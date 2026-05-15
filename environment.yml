@@ -1,0 +1,12 @@
+name: streamlit_app
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11.9
+  - pandas=2.2.2
+  - pip=24.0
+  - duckdb==1.5.2  
+  - pip:
+      - streamlit==1.36.0
+      - plotly==5.22.0
