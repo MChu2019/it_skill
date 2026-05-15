@@ -3,6 +3,7 @@ channels:
   - conda-forge
   - defaults
 dependencies:
+  - rapidfuzz
   - python=3.11.9
   - pandas=2.2.2
   - pip=24.0
