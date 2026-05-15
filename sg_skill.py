@@ -133,6 +133,7 @@ def find_best_match(title, ref_titles):
     chunk['Job Title'].astype(str).tolist(),
     ref_titles,
     scorer=fuzz.token_sort_ratio
+    )
     
     if match and match[1] >= match_threshold:
         return match[0], match[1]
