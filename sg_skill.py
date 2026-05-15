@@ -116,24 +116,22 @@ def parse_it_skills(skill_str):
 # =========================================================
 # FUZZY MATCHING
 # =========================================================
-def find_best_match(title, ref_titles):
 
-    if not isinstance(title, str):
+def find_best_match(title, ref_titles):
+    if not isinstance(title, str) or not ref_titles:
         return None, 0
 
-
-  
-    matches = process.cdist(
-    chunk['Job Title'].astype(str).tolist(),
-    ref_titles,
-    scorer=fuzz.token_sort_ratio
-    )
+    # RapidFuzz process.extractOne is better for matching a single string against a list
+    # It returns (match_string, score, index)
+    result = process.extractOne(title, ref_titles, scorer=fuzz.token_sort_ratio)
     
-    if match and match[1] >= match_threshold:
-        return match[0], match[1]
+    if result:
+        best_match, score, _ = result
+        if score >= match_threshold:
+            return best_match, score
 
     return None, 0
-
+    
 def extract_categories(text):
     if pd.isna(text):
         return None
