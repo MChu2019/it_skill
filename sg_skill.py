@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import duckdb
@@ -31,7 +30,7 @@ chunk_size = st.sidebar.selectbox("Chunk Size", [50000, 100000, 200000], index=1
 @st.cache_data
 def load_reference_data():
     try:
-        ref_path = "JobsDatasetProcessed.csv"
+        ref_path = "/home/mychu/my_app/JobsDatasetProcessed.csv"
 
         query = f"""
         SELECT *
@@ -133,7 +132,19 @@ def find_best_match(title, ref_titles):
 
     return None, 0
 
+def extract_categories(text):
+    if pd.isna(text):
+        return None
 
+    try:
+        data = json.loads(text)   # convert string → Python list
+
+        categories = [item.get("category") for item in data if "category" in item]
+
+        return ", ".join(categories)  # join multiple categories
+
+    except:
+        return None
 # =========================================================
 # MAIN PROCESSING
 # =========================================================
@@ -170,16 +181,16 @@ if uploaded_file and ref_df is not None:
             # ================================================
             # CLEAN SALARY
             # ================================================
-            if 'Salary' in chunk.columns:
-                chunk['Salary_Cleaned'] = chunk['Salary'].apply(clean_salary)
+            if 'average_salary' in chunk.columns:
+                chunk['Salary_Cleaned'] = chunk['average_salary'].apply(clean_salary)
             else:
                 chunk['Salary_Cleaned'] = None
 
             # ================================================
             # STANDARDIZE INDUSTRY
             # ================================================
-            if 'Industry' in chunk.columns:
-                chunk['Industry'] = chunk['Industry'].apply(standardize_category)
+            if 'categories' in chunk.columns:
+                chunk['Industry'] = chunk['categories'].apply(extract_categories)
             else:
                 chunk['Industry'] = 'Unknown'
 
@@ -208,11 +219,19 @@ if uploaded_file and ref_df is not None:
             # ================================================
             # MERGE REFERENCE DATA
             # ================================================
+            #merged_chunk = chunk.merge(
+            #    ref_df[['Job Title', 'IT Skills']],
+            #    left_on='Matched_Job_Title',
+            #    right_on='Job Title',
+            #    how='left'
+            #)
+
             merged_chunk = chunk.merge(
-                ref_df[['Job Title', 'IT Skills']],
-                left_on='Matched_Job_Title',
-                right_on='Job Title',
-                how='left'
+            ref_df[['Job Title', 'IT Skills']],
+            left_on='Matched_Job_Title',
+            right_on='Job Title',
+            how='left',
+            suffixes=('', '_ref')
             )
 
             # ================================================
@@ -438,6 +457,9 @@ if uploaded_file and ref_df is not None:
 else:
 
     st.info("👆 Upload a CSV file to begin analysis")
+
+
+
 
 
 
