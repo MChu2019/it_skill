@@ -30,7 +30,7 @@ chunk_size = st.sidebar.selectbox("Chunk Size", [50000, 100000, 200000], index=1
 @st.cache_data
 def load_reference_data():
     try:
-        ref_path = "/home/mychu/my_app/JobsDatasetProcessed.csv"
+        ref_path = "JobsDatasetProcessed.csv"
 
         query = f"""
         SELECT *
