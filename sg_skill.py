@@ -121,12 +121,19 @@ def find_best_match(title, ref_titles):
     if not isinstance(title, str):
         return None, 0
 
+    '''
     match = process.extractOne(
         title,
         ref_titles,
         scorer=fuzz.token_sort_ratio
     )
-
+    '''
+    
+    matches = process.cdist(
+    chunk['Job Title'].astype(str).tolist(),
+    ref_titles,
+    scorer=fuzz.token_sort_ratio
+    
     if match and match[1] >= match_threshold:
         return match[0], match[1]
 
